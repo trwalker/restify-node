@@ -1,0 +1,25 @@
+{
+  "name": "restify-node",
+  "version": "1.0.0",
+  "description": "Node application using restify",
+  "main": "server.js",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {
+    "restify": "~2.7.0",
+    "q": "*"
+  },
+  "devDependencies": {
+    "chai": "^1.9.1",
+    "mocha": "^1.18.2",
+    "grunt-mocha-cli": "^1.8.0",
+    "sinon": "^1.9.1"
+  },
+  "scripts": {
+    "test": "mocha",
+    "start": "node server.js"
+  },
+  "author": "Tim Walker",
+  "license": "ISC"
+}
