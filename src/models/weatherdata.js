@@ -7,5 +7,5 @@ module.exports = function() {
 			tempC: '0',
 			humidity: '0'		
 		};
-	});
+	})();
 };

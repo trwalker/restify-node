@@ -15,10 +15,10 @@ module.exports = function() {
 		}
 
 		function processWeatherData(rawWeatherData) {
-			var weatherData = require('../models/weatherdata');
-			weatherData.tempF = rawWeatherData.temp_F;
-			weatherData.tempC = rawWeatherData.temp_C;
-			weatherData.humidity = rawWeatherData.humidity;
+			var weatherData = require('../models/weatherdata')();
+			weatherData.tempF = rawWeatherData.data.current_condition[0].temp_F;
+			weatherData.tempC = rawWeatherData.data.current_condition[0].temp_C;
+			weatherData.humidity = rawWeatherData.data.current_condition[0].humidity;
 
 			cachedData = weatherData;
 
