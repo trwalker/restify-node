@@ -21,19 +21,28 @@ describe('WeatherController Tests', function() {
 		});
 
 		it('calls weatherService getWeather()', function() {
-			sinon.stub(dataService, 'getWeather');
+			sinon.stub(weatherService, 'getWeather').returns(Q.fcall(function () {
+    		return { tempF: '100', tempC: '70', humidity: '10' };
+			}));
 			
 			weatherController.get(req, res, next);
 
-			expect(dataService.getData.called).to.equal(true);
-			expect(dataService.getData.callCount).to.equal(1);
+			expect(weatherService.getWeather.called).to.equal(true);
+			expect(weatherService.getWeather.callCount).to.equal(1);
 		});
 
 		it('calls res send()', function() {
+			sinon.stub(weatherService, 'getWeather').returns(Q.fcall(function () {
+    		return { tempF: '100', tempC: '70', humidity: '10' };
+			}));
+
 			weatherController.get(req, res, next);
 
-			expect(res.send.called).to.equal(true);
-			expect(res.send.callCount).to.equal(1);
+			setTimeout(function() {
+				expect(res.send.called).to.equal(true);
+				expect(res.send.callCount).to.equal(1);	
+			}, 10)
+			
 		});
 
 	});

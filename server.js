@@ -1,5 +1,7 @@
 'use strict';
 
+global.Q = require('q');
+
 global.restify = require('restify');
 
 global.server = restify.createServer();

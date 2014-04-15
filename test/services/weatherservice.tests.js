@@ -12,13 +12,17 @@ describe('WeatherService Tests', function() {
 			expect(weatherService.getWeather).to.be.a('function');
 		});
 
-		it('check return value', function() {
-			sinon.stub(weatherService, 'getWeather').returns({ hello: 'world' });
+		it('validate return value', function() {
+			sinon.stub(weatherService, 'getWeather').returns(Q.fcall(function () {
+    		return { tempF: '100', tempC: '70', humidity: '10' };
+			}));
 			
-			var data = weatherService.getData();
+			weatherService.getWeather().then(function(weatherData) {
+				expect(weatherService.getWeather.called).to.equal(true);
+				expect(weatherData.tempF).to.equal('100');
+			});
 
-			expect(weatherService.getData.called).to.equal(true);
-			expect(data.hello).to.equal('world');
+			
 		});
 
 	});

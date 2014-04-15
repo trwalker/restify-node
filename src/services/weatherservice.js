@@ -3,10 +3,11 @@
 module.exports = function() { 
   return (function() {
 
-  	var cachedData = null;
+  	global.weather = {};
+  	global.weather.postalCodeCachedData = {};
 
   	function getWeatherData() {
-			if(cachedData !== null) {
+			if(global.weather.postalCodeCachedData[postalCode] !== null) {
 				return getCacheData();
 			}
 			else {
