@@ -1,59 +1,61 @@
 'use strict';
 
-module.exports = function() { 
-  return (function() {
+module.exports = function(jsonClientService) { 
+  return (function(jsonClientService) {
 
-  	global.weather = {};
-  	global.weather.postalCodeCachedData = {};
+   	global.weather = global.weather || {};
+   	global.weather.url = global.weather.url || 'http://api.worldweatheronline.com';
+   	global.weather.pathFormat = global.weather.pathFormat || '/free/v1/weather.ashx?q={0}&format=json&num_of_days=1&key=e8ky4rbwxedqmgmtbkgtqpdb';
+  	global.weather.postalCodeCachedData = global.weather.postalCodeCachedData || {};
 
-  	function getWeatherData() {
-			if(global.weather.postalCodeCachedData[postalCode] !== null) {
-				return getCacheData();
+  	var weatherPostalCode;
+
+  	function getWeatherData(postalCode) {
+  		weatherPostalCode = postalCode;
+
+  		var cachedWeatherData = weather.postalCodeCachedData[weatherPostalCode];
+
+			if(cachedWeatherData) {
+				return Q.fcall(function () {
+    			return cachedWeatherData;
+				});
 			}
 			else {
-				return getDataFromHttpRequest().then(processWeatherData);
+				var path = weather.pathFormat.replace('{0}', weatherPostalCode);
+				return jsonClientService.get(weather.url, path).then(weatherServiceSuccess, weatherServiceError);
 			}
 		}
 
-		function processWeatherData(rawWeatherData) {
-			var weatherData = require('../models/weatherdata')();
-			weatherData.tempF = rawWeatherData.data.current_condition[0].temp_F;
-			weatherData.tempC = rawWeatherData.data.current_condition[0].temp_C;
-			weatherData.humidity = rawWeatherData.data.current_condition[0].humidity;
+		function weatherServiceSuccess(rawWeatherData) {
+			var weatherData;
 
-			cachedData = weatherData;
+			if(rawWeatherData && rawWeatherData.data && rawWeatherData.data.current_condition) {
+				weatherData = require('../models/weatherdata')();
+				weatherData.tempF = rawWeatherData.data.current_condition[0].temp_F;
+				weatherData.tempC = rawWeatherData.data.current_condition[0].temp_C;
+				weatherData.humidity = rawWeatherData.data.current_condition[0].humidity;
+
+				weather.postalCodeCachedData[weatherPostalCode] = weatherData;
+			}
+			else {
+				weatherData = weatherServiceError(rawWeatherData);
+			}
 
 			return weatherData;
 		}
 
-  	function getCacheData() {
-  		return Q.fcall(function () {
-    		return cachedData;
-			});
-  	}
+		function weatherServiceError(rawWeatherData) {
+			var weatherData = require('../models/weatherdata')();
+			weatherData.tempF = '0';
+			weatherData.tempC = '0';
+			weatherData.humidity = '0';
 
-  	function getDataFromHttpRequest() {
-  		var deferred = Q.defer();
-
-  		var client = restify.createJsonClient({
-  			url: 'http://api.worldweatheronline.com'
-			});
-			
-			client.get('/free/v1/weather.ashx?q=85260&format=json&num_of_days=1&key=e8ky4rbwxedqmgmtbkgtqpdb', function(err, req, res, obj) {
-			  if(err) {
-					deferred.reject(err);
-			  }
-			  else {
-			  	deferred.resolve(obj);
-			  }
-			});
-			
-			return deferred.promise;
-  	}
+			return weatherData;
+		}
 
 		return {
 			getWeather: getWeatherData
 		};
 
-	})();
+	})(jsonClientService);
 };

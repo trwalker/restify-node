@@ -1,9 +1,11 @@
 describe('WeatherService Tests', function() {
 	
+	var jsonClientService;
 	var weatherService;
 
 	beforeEach(function() {
-		weatherService = require('../../src/services/weatherservice')();
+		jsonClientService = require('../../src/services/jsonclientservice')();
+		weatherService = require('../../src/services/weatherservice')(jsonClientService);
 	});
 
 	describe('getWeather()', function(){
@@ -12,17 +14,15 @@ describe('WeatherService Tests', function() {
 			expect(weatherService.getWeather).to.be.a('function');
 		});
 
-		it('validate return value', function() {
-			sinon.stub(weatherService, 'getWeather').returns(Q.fcall(function () {
-    		return { tempF: '100', tempC: '70', humidity: '10' };
+		it('calls jsonClientService.get()', function() {
+			sinon.stub(jsonClientService, 'get').returns(Q.fcall(function () {
+    		return { data: { current_condition: [ { temp_F: '100', temp_C: '70', humidity: '10' } ] } };
 			}));
 			
-			weatherService.getWeather().then(function(weatherData) {
-				expect(weatherService.getWeather.called).to.equal(true);
-				expect(weatherData.tempF).to.equal('100');
+			weatherService.getWeather('85260').then(function(weatherData) {
+				expect(jsonClientService.get.called).to.equal(true);
+				expect(jsonClientService.get.callCount).to.equal(1);
 			});
-
-			
 		});
 
 	});

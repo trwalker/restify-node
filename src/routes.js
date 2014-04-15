@@ -14,8 +14,9 @@ module.exports = function(server) {
   	errorController.error(req, res, route, err);
   });
 
-  server.get('/weather/:zip', function(req, res, next) {
-  	var weatherService = require('./services/weatherservice')();
+  server.get('/weather/:postalcode', function(req, res, next) {
+  	var jsonClientService = require('./services/jsonClientService')();
+    var weatherService = require('./services/weatherservice')(jsonClientService);
 		var weatherController = require('./controllers/weathercontroller')(weatherService);	
 
   	weatherController.get(req, res, next);
