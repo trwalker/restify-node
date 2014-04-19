@@ -6,12 +6,13 @@ describe('WeatherController Tests', function() {
 	var req, res, next;
 
 	beforeEach(function() {
-		jsonClientService = require('../../src/services/jsonclientservice')();
-		weatherService = require('../../src/services/weatherservice')(jsonClientService);
-		weatherController = require('../../src/controllers/weathercontroller')(weatherService);
+		jsonClientService = require('../../lib/services/jsonclientservice')();
+		weatherService = require('../../lib/services/weatherservice')(jsonClientService);
+		weatherController = require('../../lib/controllers/weathercontroller')(weatherService);
 
-		res = { send: function() { } };
+		res = { send: function() {}, end: function() {} };
 		sinon.stub(res, 'send');
+		sinon.stub(res, 'end');
 		next = sinon.stub();
 	});
 
@@ -21,21 +22,18 @@ describe('WeatherController Tests', function() {
 			expect(weatherController.get).to.be.a('function');
 		});
 
-		it('calls weatherService getWeather() valid request', function(done) {
-			sinon.stub(weatherService, 'getWeather').returns(Q.fcall(function () {
-    		return { tempF: '100', tempC: '70', humidity: '10' };
-    		done();
-			}));
+		it('calls weatherService getWeather() with valid request', function() {
+			sinon.stub(weatherService, 'getWeather');
 
 			req = { params: { postalcode: '85260' } };
 
 			weatherController.get(req, res, next);
-			
-			expect(weatherService.getWeather.called).to.equal(true);
+
 			expect(weatherService.getWeather.callCount).to.equal(1);
+			expect(weatherService.getWeather.calledWith('85260'));
 		});
 
-		it('calls weatherService getWeather() empty request', function(done) {
+		it('calls weatherService getWeather() empty request', function() {
 			sinon.spy(weatherService, 'getWeather');
 
 			req = {};
@@ -44,7 +42,6 @@ describe('WeatherController Tests', function() {
 
 			expect(weatherService.getWeather.called).to.equal(false);
 
-			done();
 		});
 
 	});
