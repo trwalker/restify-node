@@ -1,11 +1,11 @@
-describe('JsonClientService Tests', function() {
+describe('JsonClientRepository Tests', function() {
 	
-	var jsonClientService;
+	var jsonClientRepository;
 	var client;
 
 	beforeEach(function() {
-		jsonClientService = require('../../lib/services/jsonclientservice')();
-		client = client = restify.createJsonClient({
+		jsonClientRepository = require('../../../lib/repositories/http/jsonclientrepository')();
+		client = restify.createJsonClient({
 			url: 'http://www.helloworld.com'
 		});
 	});
@@ -13,7 +13,7 @@ describe('JsonClientService Tests', function() {
 	describe('get()', function(){
 
 		it('is a function', function() {
-			expect(jsonClientService.get).to.be.a('function');
+			expect(jsonClientRepository.get).to.be.a('function');
 		});
 
 		it('calls restify.createJsonClient() and client.get()', function() {
@@ -21,7 +21,7 @@ describe('JsonClientService Tests', function() {
 
 			sinon.stub(restify, 'createJsonClient').returns(client);
 
-			jsonClientService.get('http://www.helloworld.com', '/somepath', null, function(res, obj) {}, function(res, err) {})
+			jsonClientRepository.get('http://www.helloworld.com', '/somepath', null, function(res, obj) {}, function(res, err) {})
 
 			expect(restify.createJsonClient.callCount).to.equal(1);
 			expect(client.get.callCount).to.equal(1);
