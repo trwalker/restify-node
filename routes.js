@@ -9,7 +9,6 @@ module.exports = function(server, fs) {
   });
 
   server.on('uncaughtException', function (req, res, route, err) { 
-  	debugger;
     var errorController = require('./lib/controllers/v1/error/errorcontroller')();
 
   	errorController.error(req, res, route, err);
