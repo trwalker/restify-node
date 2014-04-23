@@ -8,13 +8,14 @@ module.exports = function(server, fs) {
   	next();
   });
 
-  server.on('uncaughtException', function(req, res, route, err) {
-  	var errorController = require('./controllers/errorcontroller');
+  server.on('uncaughtException', function (req, res, route, err) { 
+  	debugger;
+    var errorController = require('./lib/controllers/v1/error/errorcontroller')();
 
   	errorController.error(req, res, route, err);
   });
 
   var routeResolver = require('./lib/routeresolver')(server, fs);
-  routeResolver.registerRoutes(server);
+  routeResolver.registerRoutes();
   
 };
