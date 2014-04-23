@@ -1,6 +1,6 @@
 'use strict';
 
-module.exports = function(server) {
+module.exports = function(server, fs) {
   
   server.use(function(req, res, next) {
   	res.setHeader('content-type', 'application/json');
@@ -14,7 +14,7 @@ module.exports = function(server) {
   	errorController.error(req, res, route, err);
   });
 
-  var routeResolver = require('./lib/routeresolver')(server);
+  var routeResolver = require('./lib/routeresolver')(server, fs);
   routeResolver.registerRoutes(server);
   
 };
