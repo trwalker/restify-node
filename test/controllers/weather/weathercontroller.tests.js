@@ -1,14 +1,21 @@
 describe('WeatherController Tests', function() {
-	
-	var jsonClientRepository;
-	var weatherService;
+
+	var mockWeatherService;
 	var weatherController;
 	var req, res, next;
 
 	beforeEach(function() {
-		jsonClientRepository = require('../../../lib/repositories/http/jsonclientrepository')();
-		weatherService = require('../../../lib/services/weather/weatherservice')(jsonClientRepository);
-		weatherController = require('../../../lib/controllers/v1/weather/weathercontroller')(weatherService);
+		var MockJsonClientRepository = function() {};
+		MockJsonClientRepository.prototype.get = sinon.stub();
+
+		var MockWeatherService = function() {};
+		MockWeatherService.prototype.getWeatherByZipCode = sinon.stub();
+
+		var injector = new di.Injector([MockJsonClientRepository]);
+		mockWeatherService = injector.get(MockWeatherService);
+
+		var WeatherController = require('../../../lib/controllers/v1/weather/weathercontroller');
+		weatherController = new WeatherController(mockWeatherService);	
 
 		res = { send: function() {}, end: function() {} };
 		sinon.stub(res, 'send');
@@ -23,35 +30,29 @@ describe('WeatherController Tests', function() {
 		});
 
 		it('calls weatherService getWeatherByZipCode() with valid request', function() {
-			sinon.stub(weatherService, 'getWeatherByZipCode');
-
 			req = { params: { zipcode: '85260' } };
 
 			weatherController.getWeatherZipCode(req, res, next);
 
-			expect(weatherService.getWeatherByZipCode.callCount).to.equal(1);
-			expect(weatherService.getWeatherByZipCode.calledWith('85260'));
+			expect(mockWeatherService.getWeatherByZipCode.callCount).to.equal(1);
+			expect(mockWeatherService.getWeatherByZipCode.calledWith('85260'));
 		});
 
 		it('calls weatherService getWeatherByZipCode() empty request', function() {
-			sinon.spy(weatherService, 'getWeatherByZipCode');
-
 			req = {};
 
 			weatherController.getWeatherZipCode(req, res, next);
 
-			expect(weatherService.getWeatherByZipCode.called).to.equal(false);
+			expect(mockWeatherService.getWeatherByZipCode.called).to.equal(false);
 
 		});
 
 		it('calls weatherService getWeatherByZipCode() request missing postal code', function() {
-			sinon.spy(weatherService, 'getWeatherByZipCode');
-
 			req = { params: {} };
 
 			weatherController.getWeatherZipCode(req, res, next);
 
-			expect(weatherService.getWeatherByZipCode.called).to.equal(false);
+			expect(mockWeatherService.getWeatherByZipCode.called).to.equal(false);
 
 		});
 

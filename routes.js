@@ -14,7 +14,9 @@ module.exports = function(server, fs) {
   	errorController.error(req, res, route, err);
   });
 
-  var routeResolver = require('./lib/routeresolver')(server, fs);
+  var RouteResolver = require('./lib/routeresolver');
+  
+  var routeResolver = new RouteResolver(server, fs);
   routeResolver.registerRoutes();
   
 };

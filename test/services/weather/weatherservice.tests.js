@@ -1,11 +1,16 @@
 describe('WeatherService Tests', function() {
 	
-	var jsonClientRepository;
+	var mockJsonClientRepository;
 	var weatherService;
 
 	beforeEach(function() {
-		jsonClientRepository = require('../../../lib/repositories/http/jsonclientrepository')();
-		weatherService = require('../../../lib/services/weather/weatherservice')(jsonClientRepository);
+		var MockJsonClientRepository = function() {};
+		MockJsonClientRepository.prototype.get = function() {};
+
+		mockJsonClientRepository = new MockJsonClientRepository();
+
+		var WeatherService = require('../../../lib/services/weather/weatherservice');		
+		weatherService = new WeatherService(mockJsonClientRepository);
 	});
 
 	describe('getWeatherByZipCode()', function(){
@@ -15,11 +20,11 @@ describe('WeatherService Tests', function() {
 		});
 
 		it('calls jsonClientRepository.get()', function() {
-			sinon.stub(jsonClientRepository, 'get');
+			sinon.stub(mockJsonClientRepository, 'get');
 			
 			weatherService.getWeatherByZipCode('85260', function() {}, function() {});
 
-			expect(jsonClientRepository.get.callCount).to.equal(1);
+			expect(mockJsonClientRepository.get.callCount).to.equal(1);
 		});
 
 		it('valid postal code', function(done) {
@@ -36,7 +41,7 @@ describe('WeatherService Tests', function() {
 				done();
 			};
 
-			sinon.stub(jsonClientRepository, 'get', function(url, path, headers, success, error) {
+			sinon.stub(mockJsonClientRepository, 'get', function(url, path, headers, success, error) {
 				success({ status: 200 }, { data: { current_condition: [{ temp_F: '100', temp_C: '70', humidity: '10' }] } });
 			});
 			

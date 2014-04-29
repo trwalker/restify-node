@@ -6,7 +6,9 @@ describe('JsonClientRepository Tests', function() {
 
 	beforeEach(function() {
 		restify = require('restify');
-		jsonClientRepository = require('../../../lib/repositories/http/jsonclientrepository')();
+		var JsonClientRepository = require('../../../lib/repositories/http/jsonclientrepository');
+		jsonClientRepository = new JsonClientRepository();
+
 		client = restify.createJsonClient({
 			url: 'http://www.helloworld.com'
 		});
