@@ -1,12 +1,20 @@
 'use strict';
 
-var server = require('restify').createServer();
-var fs = require('fs');
+var ipAddress = process.argv[2] ? process.argv[2] : '127.0.0.1';
+var port =  process.argv[3] ? parseInt(process.argv[3]) : 9000;
+var clusterEnabled = process.argv[4] ? parseInt(process.argv[4]) : 0;
 
-require('./lib/config/config')(server);
+if(clusterEnabled === 1) {
+	var cluster = require('cluster');
+	
+	if(cluster.isMaster) {
+		require('./lib/config/clusterconfig')(cluster);
+	}
+	else {
+		require('./lib/config/serverconfig')().configure(ipAddress, port);
+	}
+}
+else {
+	require('./lib/config/serverconfig')().configure(ipAddress, port);
+}
 
-require('./routes')(server, fs);
-
-server.listen(9000, '127.0.0.1', function() {
-	console.log('%s listening at %s', server.name, server.url);
-});
