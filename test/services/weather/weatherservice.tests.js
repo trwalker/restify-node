@@ -4,10 +4,8 @@ describe('WeatherService Tests', function() {
 	var weatherService;
 
 	beforeEach(function() {
-		var MockJsonClientRepository = function() {};
-		MockJsonClientRepository.prototype.get = function() {};
-
-		mockJsonClientRepository = new MockJsonClientRepository();
+		var JsonClientRepository = require('../../../lib/repositories/http/jsonClientRepository');
+		mockJsonClientRepository = new JsonClientRepository();
 
 		var WeatherService = require('../../../lib/services/weather/weatherservice');		
 		weatherService = new WeatherService(mockJsonClientRepository);

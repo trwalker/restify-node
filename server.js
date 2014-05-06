@@ -8,13 +8,13 @@ if(clusterEnabled === 1) {
 	var cluster = require('cluster');
 	
 	if(cluster.isMaster) {
-		require('./lib/config/clusterconfig')(cluster);
+		require('./lib/config/clusterconfig')(cluster).configureCluster();
 	}
 	else {
-		require('./lib/config/serverconfig')().configure(ipAddress, port);
+		require('./lib/config/serverconfig')().configureServer(ipAddress, port);
 	}
 }
 else {
-	require('./lib/config/serverconfig')().configure(ipAddress, port);
+	require('./lib/config/serverconfig')().configureServer(ipAddress, port);
 }
 

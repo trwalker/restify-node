@@ -5,14 +5,11 @@ describe('WeatherController Tests', function() {
 	var req, res, next;
 
 	beforeEach(function() {
-		var MockJsonClientRepository = function() {};
-		MockJsonClientRepository.prototype.get = sinon.stub();
+		var mockJsonClientRepository = { get: function() {} };
 
-		var MockWeatherService = function() {};
-		MockWeatherService.prototype.getWeatherByZipCode = sinon.stub();
-
-		var injector = new di.Injector([MockJsonClientRepository]);
-		mockWeatherService = injector.get(MockWeatherService);
+		var WeatherService = require('../../../lib/services/weather/weatherservice');
+		mockWeatherService = new WeatherService(mockJsonClientRepository);
+		mockWeatherService.getWeatherByZipCode = sinon.stub();
 
 		var WeatherController = require('../../../lib/controllers/v1/weather/weathercontroller');
 		weatherController = new WeatherController(mockWeatherService);	
