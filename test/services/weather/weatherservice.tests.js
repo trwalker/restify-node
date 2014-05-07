@@ -1,14 +1,18 @@
 describe('WeatherService Tests', function() {
 	
+	var mockCacheService;
 	var mockJsonClientRepository;
 	var weatherService;
 
 	beforeEach(function() {
-		var JsonClientRepository = require('../../../lib/repositories/http/jsonClientRepository');
+		var MockCacheService = require('../../../lib/services/caching/cacheservice');
+		mockCacheService = new MockCacheService();
+
+		var JsonClientRepository = require('../../../lib/repositories/http/jsonclientrepository');
 		mockJsonClientRepository = new JsonClientRepository();
 
 		var WeatherService = require('../../../lib/services/weather/weatherservice');		
-		weatherService = new WeatherService(mockJsonClientRepository);
+		weatherService = new WeatherService(mockCacheService, mockJsonClientRepository);
 	});
 
 	describe('getWeatherByZipCode()', function(){
