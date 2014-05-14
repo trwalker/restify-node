@@ -1,6 +1,7 @@
 describe('WeatherController Tests', function() {
 
 	var mockWeatherService;
+	var WeatherController;
 	var weatherController;
 	var req, res, next;
 
@@ -8,17 +9,34 @@ describe('WeatherController Tests', function() {
 		var mockCacheService = { get: function() {}, set: function() {} };
 		var mockJsonClientRepository = { get: function() {} };
 
-		var WeatherService = require('../../../lib/services/weather/weatherservice');
+		var WeatherService = require('../../../../lib/services/weather/weatherservice');
 		mockWeatherService = new WeatherService(mockCacheService, mockJsonClientRepository);
 		mockWeatherService.getWeatherByZipCode = sinon.stub();
 
-		var WeatherController = require('../../../lib/controllers/v1/weather/weathercontroller');
+		WeatherController = require('../../../../lib/controllers/v1/weather/weathercontroller');
 		weatherController = new WeatherController(mockWeatherService);	
 
 		res = { send: function() {}, end: function() {} };
 		sinon.stub(res, 'send');
 		sinon.stub(res, 'end');
 		next = sinon.stub();
+	});
+
+	describe('registerRoutes()', function() {
+
+		it('is a function', function() {
+			expect(WeatherController.registerRoutes).to.be.a('function');
+		});
+
+		it('calls server get() with route', function() {
+			var server = { get: function(route, callback) { } };
+			sinon.stub(server, 'get');
+
+			WeatherController.registerRoutes(server);
+
+			expect(server.get.calledWith('v1/weather/:zipcode'));
+		});
+
 	});
 
 	describe('getWeatherZipCode()', function() {
@@ -32,7 +50,6 @@ describe('WeatherController Tests', function() {
 
 			weatherController.getWeatherZipCode(req, res, next);
 
-			expect(mockWeatherService.getWeatherByZipCode.callCount).to.equal(1);
 			expect(mockWeatherService.getWeatherByZipCode.calledWith('85260'));
 		});
 
