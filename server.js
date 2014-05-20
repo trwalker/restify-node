@@ -1,12 +1,12 @@
 'use strict';
 
-var processConfig = require('./lib/config/processconfig')(process);
+require('./lib/config/settingsconfig')(process);
 
-if(processConfig.clusterEnabled === 1) {
+if(configSettings.clusterEnabled === 1) {
 	require('cluster-service').start({ workers: './lib/config/workerconfig.js',
 																	 	 accessKey: '123',
-																	 	 host: processConfig.hostName,
-																	 	 port: processConfig.masterPort });
+																	 	 host: configSettings.hostName,
+																	 	 port: configSettings.masterPort });
 }
 else {
 	require('./lib/config/workerconfig.js');
