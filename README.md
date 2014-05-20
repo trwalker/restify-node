@@ -1,4 +1,5 @@
-restify-node
+# restify-node
 ============
 
-Simple skeleton Restify node service
+## Local Setup
+Run 'sudo npm run-script install-local' at the command line
