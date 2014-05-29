@@ -25,13 +25,13 @@ restify-node
 
 > npm server.js {clustered} {hostname} {masterport} {workerport}
 
-**clustered**: Flag that tells the application to use cluster-service.  Default is 0.
+**clustered** (bit): Tells the application to use cluster-service.  Default is 0.
 
-**hostname**: String that tells the application what hostname to use.  Default is 127.0.0.1.
+**hostname** (string): Tells the application what hostname to use.  Default is 127.0.0.1.
 
-**masterport**: Int that tells the application which port to use for the master process (this is a backdoor port that allows you to talk to your mater process).  Default is 3000.
+**masterport** (int): Tells the application which port to use for the master process (this is a backdoor port that allows you to talk to your master process).  Default is 3000.
 
-**workerport**: Int that tells the application which port to use for the worker processes (this is the port the application will take requests on). Default is 9000.
+**workerport** (int): Tells the application which port to use for the worker processes (this is the port the application will take requests on). Default is 9000.
 
 ### Command Line Example
 
