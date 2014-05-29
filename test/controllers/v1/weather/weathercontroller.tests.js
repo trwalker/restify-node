@@ -14,7 +14,7 @@ describe('WeatherController Tests', function() {
 		mockWeatherService.getWeatherByZipCode = sinon.stub();
 
 		WeatherController = require('../../../../lib/controllers/v1/weather/weathercontroller');
-		weatherController = new WeatherController(mockWeatherService);	
+		weatherController = new WeatherController(mockWeatherService);
 
 		res = { send: function() {}, end: function() {} };
 		sinon.stub(res, 'send');
