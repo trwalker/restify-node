@@ -1,4 +1,4 @@
-##restify-node
+restify-node
 ============
 
 ### Local Setup Command
@@ -9,6 +9,7 @@ npm start
 npm server.js
 ### Command Line Args
 npm server.js {clustered=0|1} {hostname} {masterport} {workerport}
+
 example: npm server.js 1 www.mysite.com 9000 80
 ### Run Tests
 npm test
